@@ -147,6 +147,17 @@ patch_users_invalid = [
   {'email': 'veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeryyyyyyveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeryyyyyy@loooooooooooooooooooooooooooooooong.emaaaaaaaaaaail'}
 ]
 
+put_images = [
+  {'image': 'SampleJPGImage_1mbmb.jpg', 'code': 200},
+  {'image': 'SampleJPGImage_2mbmb.jpg', 'code': 200},
+  {'image': 'SampleJPGImage_5mbmb.jpg', 'code': 413, 'error': 'request entity is larger than limits'},
+  {'image': 'SampleJPGImage_50kbmb.jpg', 'code': 200},
+  {'image': 'SamplePNGImage_1mbmb.png', 'code': 200},
+  {'image': 'SamplePNGImage_3mbmb.png', 'code': 413, 'error': 'request entity is larger than limits'},
+  {'image': 'Sample-png-image-100kb.png', 'code': 200},
+  {'image': 'Sample-Spreadsheet-10-rows.csv', 'code': 200}
+]
+
 def create_user(url, headers, test_data):
   response = requests.post(f'{url}/users', headers=headers, json=test_data)
   assert response.status_code == 200
