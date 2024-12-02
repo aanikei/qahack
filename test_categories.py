@@ -18,9 +18,7 @@ def test_get_categories_all_params_first_16(test_data, url):
   headers = auth_header | {'X-Task-Id': task_id}
 
   # get all categories
-  response = requests.get(f'{url}/categories', headers=headers, params={ 'limit': 100 })
-  assert response.status_code == 200
-  data = response.json()
+  data = get_all_categories(url, headers=headers)
   all_categories = data['categories']
 
   # get categories with params
@@ -43,16 +41,12 @@ def test_get_categories_uuid_games(url):
   headers = auth_header | {'X-Task-Id': task_id}
 
   # get all categories' uuids
-  response = requests.get(f'{url}/categories', headers=headers, params={ 'limit': 100 })
-  assert response.status_code == 200
-  data = response.json()
+  data = get_all_categories(url, headers=headers)
   all_categories = data['categories']
   categories_uuids = [i['uuid'] for i in all_categories]
 
   # get all games
-  response = requests.get(f'{url}/games', headers=headers, params={ 'limit': 100 })
-  assert response.status_code == 200
-  data = response.json()
+  data = get_all_games(url, headers=headers)
   all_games = data['games']
 
   # verify games' categories are legit and present in categories list
@@ -91,10 +85,8 @@ task_id = 'api-10'
 def test_get_categories_uuid_games_all_params(test_data, url):
   headers = auth_header | {'X-Task-Id': task_id}
 
-  # get most used in games category
-  response = requests.get(f'{url}/games', headers=headers, params={ 'limit': 100 })
-  assert response.status_code == 200
-  data = response.json()
+  # get most used category in games 
+  data = get_all_games(url, headers=headers)
   all_games = data['games']
 
   category_uuids = [] 
@@ -135,9 +127,7 @@ def test_get_categories_uuid_games_no_auth(url):
   headers = auth_header | {'X-Task-Id': task_id}
 
   # get any category
-  response = requests.get(f'{url}/categories', headers=headers, params={ 'limit': 100 })
-  assert response.status_code == 200
-  data = response.json()
+  data = get_all_categories(url, headers=headers)
   category = data['categories'][0]['uuid']
 
   headers['Authorization'] = headers['Authorization'][:-10]
