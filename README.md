@@ -74,18 +74,24 @@ Not tested:
 | api-6 | offset parameter has no effect while getting data from `/users` | 1. Set offset parameter to non-0 value and verify that data is returned corresponding to offset | Offset is honored | Offset has no effect |
 | api-24 | Updated user cannot log in | 1. Update any field of a user <br/>2. Send post to `/users/login` | Response code 200 | Response code 404 |
 
-# Setup insctructions
+# Setup instructions
 
 **install python & git if not installed, then**
 
-`git clone https://github.com/aanikei/qahack.git`
+create a test directory
 
-`pip install pytest requests allure-pytest python-dotenv pytest-retry jsonschema`
+create virtual environment `python -m venv env`
 
-create a .env file with content `EMAIL=your@mail.com` and put it in the root folder
+activate virtual env (in CMD): `activate.bat`
 
-`pytest --alluredir allure-results --retries 6 --env dev` **(for dev env, --retries 6 is used because envs are not stable)**
+clone repo into test directory `git clone https://github.com/aanikei/qahack.git`
+
+install dependencies `pip install pytest requests allure-pytest python-dotenv pytest-retry jsonschema`
+
+cd into `qahack` directory and create a .env file with content `EMAIL=your@mail.com`
+
+run tests `pytest --alluredir allure-results --retries 6 --env dev` **(for dev env, --retries 6 is used because envs are not stable)**
 
 `pytest --alluredir allure-results --retries 6 --env release` **(for release env)**
 
-`allure serve allure-results`
+run report `allure serve allure-results`
