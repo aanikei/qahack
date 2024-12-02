@@ -108,7 +108,7 @@ def test_get_categories_uuid_games_no_auth(url):
   category = data['categories'][0]['uuid']
 
   headers['Authorization'] = headers['Authorization'][:-10]
-  print(headers)
+  
   # get all games from given category without proper authorization 
   response = requests.get(f'{url}/categories/{category}/games', headers=headers, params={ 'limit': 100 })
   assert response.status_code == 404
