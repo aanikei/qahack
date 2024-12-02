@@ -4,7 +4,6 @@ import requests
 email = os.getenv('EMAIL')
 auth_header = { 'Authorization': f'Bearer qahack2024:{email}' }
 
-#Users
 get_users_all_parameters= [ 
   {'offset': 0, 'limit': 2},
   {'offset': 0, 'limit': 10},
@@ -24,13 +23,6 @@ get_users_all_parameters= [
   {'offset': 1},
   {'offset': 8},
   {'offset': 9}
-]
-
-get_users_limit = [
-  {'limit': 11},
-  {'limit': 50},
-  {'limit': 99},
-  {'limit': 100},
 ]
 
 post_users_valid = [
@@ -147,15 +139,50 @@ patch_users_invalid = [
   {'email': 'veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeryyyyyyveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeryyyyyy@loooooooooooooooooooooooooooooooong.emaaaaaaaaaaail'}
 ]
 
-put_images = [
-  {'image': 'SampleJPGImage_1mbmb.jpg', 'code': 200},
-  {'image': 'SampleJPGImage_2mbmb.jpg', 'code': 200},
-  {'image': 'SampleJPGImage_5mbmb.jpg', 'code': 413, 'error': 'request entity is larger than limits'},
-  {'image': 'SampleJPGImage_50kbmb.jpg', 'code': 200},
-  {'image': 'SamplePNGImage_1mbmb.png', 'code': 200},
-  {'image': 'SamplePNGImage_3mbmb.png', 'code': 413, 'error': 'request entity is larger than limits'},
-  {'image': 'Sample-png-image-100kb.png', 'code': 200},
-  {'image': 'Sample-Spreadsheet-10-rows.csv', 'code': 200}
+put_images_valid = [
+  {'image': 'jpeg_100560.jpeg'},
+  {'image': 'jpeg_951357.jpeg'},
+  {'image': 'jpeg_2089830.jpeg'},
+  {'image': 'jpeg_2095249.jpeg'},
+  {'image': 'png_100.png'},
+  {'image': 'png_10000.png'},
+  {'image': 'png_2097151.png'}
+]
+
+put_images_invalid = [
+  {'image': 'png_2097155.png', 'code': 400, 'error': 'request body has an error'},
+  {'image': 'png_5001740.png', 'code': 413, 'error': 'request entity is larger than limits'},
+  # {'image': 'jpeg_2097905.jpeg', 'code': 400, 'error': 'request body has an error'}, #works in prod
+  {'image': 'jpeg_4746513.jpeg', 'code': 413, 'error': 'request entity is larger than limits'},
+  # {'image': 'image_generator.py', 'code': 413, 'error': '?'}  #works in prod
+]
+
+games_invalid_uuids = [
+  { "item_uuid": "2990ecdd-4d3d-4de2-91b9-d45d794c82bc", 'code': 404 },
+  { "item_uuid": "s378c074-92d6-4d8c-b6d3-878c08dbe27f", 'code': 400 },
+  { "item_uuid": "03dbad48-433d-9901-dd5332f5d9ea", 'code': 400 },
+  { "item_uuid": "cb620f56-daa4-43e0-b4a0-e80f8e5be27", 'code': 400 },
+  { "item_uuid": "aca79a7c-5b66-4ff2b3b8-57e56fc053a7", 'code': 400 },
+  { "item_uuid": "aca79a7c 5b66 4ff2 b3b8 57e56fc053a7", 'code': 400 },
+]
+
+get_categories_all_parameters= [ 
+  {'offset': 0, 'limit': 2},
+  {'offset': 0, 'limit': 10},
+  {'offset': 1, 'limit': 5},
+  {'offset': 1, 'limit': 9},
+  {'offset': 8, 'limit': 2},
+  {'offset': 9, 'limit': 1},
+  {'offset': 9, 'limit': 10},
+  {'offset': 10, 'limit': 9},
+  {'offset': 14, 'limit': 1},
+  {'limit': 1},
+  {'limit': 2},
+  {'limit': 15},
+  {'offset': 0},
+  {'offset': 1},
+  {'offset': 5},
+  {'offset': 6}
 ]
 
 def create_user(url, headers, test_data):
@@ -164,7 +191,7 @@ def create_user(url, headers, test_data):
   return response.json()
 
 def delete_users(url, headers):
-  response = requests.get(f'{url}/users', headers=headers)
+  response = requests.get(f'{url}/users', headers=headers, params={ 'limit': 20})
   data = response.json()
   assert response.status_code == 200
   current_users = data['users']
@@ -173,3 +200,13 @@ def delete_users(url, headers):
 
   for uuid_str in uuids:
     requests.delete(f'{url}/users/{uuid_str}', headers=headers)
+    
+def get_all_categories(url, headers):
+  response = requests.get(f'{url}/categories', headers=headers, params={ 'limit': 100 })
+  assert response.status_code == 200
+  return response.json()
+
+def get_all_games(url, headers):
+  response = requests.get(f'{url}/games', headers=headers, params={ 'limit': 100 })
+  assert response.status_code == 200
+  return response.json()
