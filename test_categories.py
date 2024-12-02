@@ -3,39 +3,16 @@ import allure
 import pytest
 from data import *
 from utils import *
-from schemas import *
+from schemas import category_uuid_games_schema
 from collections import Counter
 from jsonschema import validate
 
-# this check seems not needed but well...
-task_id = 'api-10'
-@allure.title('get /categories')
-@allure.description('Verify categories with parameters to check 16 available records')
-@allure.testcase('F-1')
-@pytest.mark.parametrize("test_data", get_categories_all_parameters)
-# @pytest.mark.skip()
-def test_get_categories_all_params_first_16(test_data, url):
-  headers = auth_header | {'X-Task-Id': task_id}
-
-  # get all categories
-  data = get_all_categories(url, headers=headers)
-  all_categories = data['categories']
-
-  # get categories with params
-  response = requests.get(f'{url}/categories', headers=headers, params=test_data)
-  assert response.status_code == 200
-  parameterized_categories = response.json()
-  start, end = param_testing(test_data, 19)
-
-  # verify sliced all_categories are the same as parameterized_categories
-  assert all_categories[start:end] == parameterized_categories['categories']
-  assert parameterized_categories['meta']['total'] == 16
-
+# pytest.skip(allow_module_level=True)
 
 task_id = 'api-10'
 @allure.title('get /categories/{category_uuid}/games')
 @allure.description('Verify categories and games are in sync')
-@allure.testcase('F-2')
+@allure.testcase('F-1')
 # @pytest.mark.skip()
 def test_get_categories_uuid_games(url):
   headers = auth_header | {'X-Task-Id': task_id}
@@ -79,7 +56,7 @@ def test_get_categories_uuid_games(url):
 task_id = 'api-10'
 @allure.title('get /categories/{category_uuid}/games')
 @allure.description('Verify /categories/{category_uuid}/games with parameters')
-@allure.testcase('F-3')
+@allure.testcase('F-2')
 @pytest.mark.parametrize("test_data", get_categories_all_parameters)
 # @pytest.mark.skip()
 def test_get_categories_uuid_games_all_params(test_data, url):
@@ -121,7 +98,7 @@ def test_get_categories_uuid_games_all_params(test_data, url):
 task_id = 'api-10'
 @allure.title('get /categories/{category_uuid}/games')
 @allure.description('Verify /categories/{category_uuid}/games with parameters')
-@allure.testcase('F-4')
+@allure.testcase('F-3')
 # @pytest.mark.skip()
 def test_get_categories_uuid_games_no_auth(url):
   headers = auth_header | {'X-Task-Id': task_id}

@@ -1,3 +1,4 @@
+#pip install pillow
 from PIL import Image, ImageDraw
 import io
 import random
